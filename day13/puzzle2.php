@@ -39,7 +39,8 @@ function compare($left,$right){
 
             if(is_array($left_value) || is_array($right_value)){
                 $return = compare($left_value, $right_value);
-                if($return === true || $return === false)
+                
+                if($return !== NULL)
                     return $return;
             }
             else{
