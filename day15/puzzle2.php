@@ -13,41 +13,41 @@ $input = array_map(function($line) use (&$sensors){
 
 $max = 4000000;
 for($y = 0;$y <= $max; $y++){
-        echo "Y $y \n";
-        $lines = [];
-        foreach ($sensors as $key => $sensor) {
-            if(
-                ($y < $sensor['y'] - $sensor['distance']) ||
-                ($y > $sensor['y'] + $sensor['distance']) 
-            )
-                continue;
-            else{
-                $x_start = $sensor['x'] - ($sensor['distance'] - (abs($sensor['y']-$y)));
-                $x_start =  $x_start < 0 ? 0:$x_start;
-                $x_start =  $x_start > $max ? $max:$x_start;
-                $x_stop = $sensor['x'] + ($sensor['distance'] - (abs($sensor['y']-$y)));
-                $x_stop =  $x_stop < 0 ? 0:$x_stop;
-                $x_stop =  $x_stop > $max ? $max:$x_stop;
+    echo "Y $y \n";
+    $lines = [];
+    foreach ($sensors as $key => $sensor) {
+        if(
+            ($y < $sensor['y'] - $sensor['distance']) ||
+            ($y > $sensor['y'] + $sensor['distance']) 
+        )
+            continue;
+        else{
+            $x_start = $sensor['x'] - ($sensor['distance'] - (abs($sensor['y']-$y)));
+            $x_start =  $x_start < 0 ? 0:$x_start;
+            $x_start =  $x_start > $max ? $max:$x_start;
+            $x_stop = $sensor['x'] + ($sensor['distance'] - (abs($sensor['y']-$y)));
+            $x_stop =  $x_stop < 0 ? 0:$x_stop;
+            $x_stop =  $x_stop > $max ? $max:$x_stop;
 
-                $lines[] = ['x_start' => $x_start, 'x_stop' => $x_stop];
-                continue;
-            }
+            $lines[] = ['x_start' => $x_start, 'x_stop' => $x_stop];
+            continue;
         }
+    }
 
-        usort($lines, function($a, $b){
-            return $a['x_start'] > $b['x_start'];
-        });
+    usort($lines, function($a, $b){
+        return $a['x_start'] > $b['x_start'];
+    });
 
-        $x = 0;
-        foreach ($lines as $key => $value) {
-            if($value['x_start'] > $x){
-                $solution = ($value['x_start'] - 1) * 4000000 + $y;
-                    break 2;
-            }
-            else{
-                $x = $value['x_stop'] > $x ? $value['x_stop']:$x;
-            }
+    $x = 0;
+    foreach ($lines as $key => $value) {
+        if($value['x_start'] > $x){
+            $solution = ($value['x_start'] - 1) * 4000000 + $y;
+                break 2;
         }
+        else{
+            $x = $value['x_stop'] > $x ? $value['x_stop']:$x;
+        }
+    }
 }
 
 echo "\nSolution : $solution";
