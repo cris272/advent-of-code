@@ -2,31 +2,31 @@
 
 $rocks = [
     0 => [
-        ['#', '#', '#', '#']
+        ['1', '1', '1', '1']
     ],
     1 => [
-        ['.', '#', '.'],
-        ['#', '#', '#'],
-        ['.', '#', '.'],
+        ['.', '2', '.'],
+        ['2', '2', '2'],
+        ['.', '2', '.'],
     ],
     2 => [
-        ['.', '.', '#'],
-        ['.', '.', '#'],
-        ['#', '#', '#'],
+        ['.', '.', '3'],
+        ['.', '.', '3'],
+        ['3', '3', '3'],
     ],
     3 => [
-        ['#'],
-        ['#'],
-        ['#'],
-        ['#'],
+        ['4'],
+        ['4'],
+        ['4'],
+        ['4'],
     ],
     4 => [
-        ['#', '#'],
-        ['#', '#'],
+        ['5', '5'],
+        ['5', '5'],
     ],
 ];
 
-$gas = str_split(file_get_contents(__DIR__."/input"));
+$gas = str_split(trim(file_get_contents(__DIR__."/input")));
 $map = [];
 for($i = 0 ; $i< 2022 ; $i++){
     $current_rock = current($rocks) ? current($rocks):reset($rocks);
@@ -38,7 +38,7 @@ for($i = 0 ; $i< 2022 ; $i++){
         next($gas);
         $new_current_rock_position = $current_rock_position;
         $new_current_rock_position['x'] = ($g == '>') ? $new_current_rock_position['x']+1:$new_current_rock_position['x']-1;
-        
+  
         if(test_position($current_rock, $new_current_rock_position, $map))
             $current_rock_position = $new_current_rock_position;
 
@@ -57,7 +57,7 @@ for($i = 0 ; $i< 2022 ; $i++){
         }
     }
 }
-
+// draw();
 echo "\nSolution : ".count($map);
 
 function test_position(array $current_rock, array $new_current_rock_position, array $map) :bool {
@@ -68,7 +68,7 @@ function test_position(array $current_rock, array $new_current_rock_position, ar
     $current_rock = array_reverse($current_rock);
     foreach (($current_rock) as $y => $line) {
         foreach ($line as $x => $char) {
-            if($char == '#' && (isset($map[$new_current_rock_position['y'] + $y][$new_current_rock_position['x'] + $x]) && $map[$new_current_rock_position['y'] + $y][$new_current_rock_position['x'] + $x] == '#'))
+            if($char != '.' && (isset($map[$new_current_rock_position['y'] + $y][$new_current_rock_position['x'] + $x]) && $map[$new_current_rock_position['y'] + $y][$new_current_rock_position['x'] + $x] != '.'))
                 return false;
         }
     }
@@ -79,7 +79,8 @@ function update_map(array $current_rock, array $current_rock_position, array &$m
     $current_rock = array_reverse($current_rock);
     foreach (($current_rock) as $y => $line) {
         foreach ($line as $x => $char) {
-            $map[$current_rock_position['y'] + $y][$current_rock_position['x'] + $x] = $current_rock[$y][$x];
+            if($char != '.')
+                $map[$current_rock_position['y'] + $y][$current_rock_position['x'] + $x] = $current_rock[$y][$x];
         }
     }
 }
@@ -89,12 +90,14 @@ function draw() :void{
     $m = array_reverse($map);
 
     foreach ($m as $y => $line) {
-        echo "|";
+        echo str_pad($y, 3)."|";
         for($i = 0;$i <7;$i++){
             echo $m[$y][$i] ?? '.';
         }
         echo "|";
         echo "\n";
+        if($y > 99)
+            break;
     }
     echo "\n";
     echo "\n";
