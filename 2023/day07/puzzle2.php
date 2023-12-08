@@ -29,7 +29,6 @@ class Hand {
         rsort($counts);
         $counts[0]+=$count_J;
         return $counts[0].($counts[1] ?? 0);
-
     }
 }
 
